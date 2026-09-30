@@ -1,0 +1,394 @@
+/* ==========================================================
+   STUDENT GRADE TRACKING DATABASE
+   ========================================================== */
+
+
+/* ==========================================================
+   1. STUDENTS
+   ========================================================== */
+
+CREATE TABLE Students (
+    Student_ID INT PRIMARY KEY,
+    First_Name VARCHAR(50) NOT NULL,
+    Last_Name VARCHAR(50) NOT NULL,
+    Address VARCHAR(100),
+    City VARCHAR(50),
+    County VARCHAR(50),
+    Age INT
+);
+
+
+/* ==========================================================
+   2. TEACHERS
+   ========================================================== */
+
+CREATE TABLE Teachers (
+    Teacher_ID INT PRIMARY KEY,
+    First_Name VARCHAR(50) NOT NULL,
+    Last_Name VARCHAR(50) NOT NULL,
+    Department VARCHAR(100)
+);
+
+
+/* ==========================================================
+   3. COURSES
+   ========================================================== */
+
+CREATE TABLE Courses (
+    Course_ID VARCHAR(20) PRIMARY KEY,
+    Course_Name VARCHAR(100) NOT NULL,
+    Teacher_ID INT NOT NULL,
+    Credits DECIMAL(3,1) NOT NULL,
+
+    FOREIGN KEY (Teacher_ID)
+        REFERENCES Teachers(Teacher_ID)
+);
+
+
+/* ==========================================================
+   4. ENROLLMENT
+   Connects students to courses.
+   ========================================================== */
+
+CREATE TABLE Enrollments (
+    Enrollment_ID INT PRIMARY KEY,
+    Student_ID INT NOT NULL,
+    Course_ID VARCHAR(20) NOT NULL,
+    Semester VARCHAR(20) NOT NULL,
+    School_Year INT NOT NULL,
+
+    FOREIGN KEY (Student_ID)
+        REFERENCES Students(Student_ID),
+
+    FOREIGN KEY (Course_ID)
+        REFERENCES Courses(Course_ID)
+);
+
+
+/* ==========================================================
+   5. ATTENDANCE
+   ========================================================== */
+
+CREATE TABLE Attendance (
+    Attendance_ID INT PRIMARY KEY,
+    Enrollment_ID INT NOT NULL,
+    Class_Date DATE NOT NULL,
+    Status VARCHAR(10) NOT NULL,
+
+    FOREIGN KEY (Enrollment_ID)
+        REFERENCES Enrollments(Enrollment_ID)
+);
+
+
+/* ==========================================================
+   6. ASSIGNMENTS
+   ========================================================== */
+
+CREATE TABLE Assignments (
+    Assignment_ID INT PRIMARY KEY,
+    Enrollment_ID INT NOT NULL,
+    Assignment_Name VARCHAR(100),
+    Score DECIMAL(5,2),
+    Maximum_Score DECIMAL(5,2),
+
+    FOREIGN KEY (Enrollment_ID)
+        REFERENCES Enrollments(Enrollment_ID)
+);
+
+
+/* ==========================================================
+   7. QUIZZES
+   ========================================================== */
+
+CREATE TABLE Quizzes (
+    Quiz_ID INT PRIMARY KEY,
+    Enrollment_ID INT NOT NULL,
+    Quiz_Name VARCHAR(100),
+    Score DECIMAL(5,2),
+    Maximum_Score DECIMAL(5,2),
+
+    FOREIGN KEY (Enrollment_ID)
+        REFERENCES Enrollments(Enrollment_ID)
+);
+
+
+/* ==========================================================
+   8. TESTS
+   ========================================================== */
+
+CREATE TABLE Tests (
+    Test_ID INT PRIMARY KEY,
+    Enrollment_ID INT NOT NULL,
+    Test_Name VARCHAR(100),
+    Score DECIMAL(5,2),
+    Maximum_Score DECIMAL(5,2),
+
+    FOREIGN KEY (Enrollment_ID)
+        REFERENCES Enrollments(Enrollment_ID)
+);
+
+
+/* ==========================================================
+   SAMPLE STUDENTS
+   ========================================================== */
+
+INSERT INTO Students
+(
+    Student_ID,
+    First_Name,
+    Last_Name,
+    Address,
+    City,
+    County,
+    Age
+)
+VALUES
+(1001, 'John', 'Smith',
+ '25 Main Street', 'East Brunswick', 'Middlesex', 18),
+
+(1002, 'Maria', 'Garcia',
+ '17 Oak Avenue', 'Edison', 'Middlesex', 19),
+
+(1003, 'Robert', 'Johnson',
+ '88 Park Road', 'New Brunswick', 'Middlesex', 20),
+
+(1004, 'Susan', 'Williams',
+ '42 Lake Drive', 'Princeton', 'Mercer', 18),
+
+(1005, 'David', 'Brown',
+ '61 Maple Street', 'Freehold', 'Monmouth', 21);
+
+
+/* ==========================================================
+   SAMPLE TEACHERS
+   ========================================================== */
+
+INSERT INTO Teachers
+(
+    Teacher_ID,
+    First_Name,
+    Last_Name,
+    Department
+)
+VALUES
+(501, 'Sarah', 'Miller', 'Computer Science'),
+(502, 'James', 'Wilson', 'Mathematics'),
+(503, 'Linda', 'Anderson', 'English');
+
+
+/* ==========================================================
+   SAMPLE COURSES
+   ========================================================== */
+
+INSERT INTO Courses
+(
+    Course_ID,
+    Course_Name,
+    Teacher_ID,
+    Credits
+)
+VALUES
+('CS101', 'Database Systems', 501, 3),
+('MAT201', 'College Algebra', 502, 4),
+('ENG101', 'English Composition', 503, 3);
+
+
+/* ==========================================================
+   ENROLL STUDENTS
+   ========================================================== */
+
+INSERT INTO Enrollments
+(
+    Enrollment_ID,
+    Student_ID,
+    Course_ID,
+    Semester,
+    School_Year
+)
+VALUES
+(1, 1001, 'CS101', 'Fall', 2026),
+(2, 1002, 'CS101', 'Fall', 2026),
+(3, 1003, 'CS101', 'Fall', 2026),
+(4, 1004, 'CS101', 'Fall', 2026),
+(5, 1005, 'CS101', 'Fall', 2026);
+
+
+/* ==========================================================
+   SAMPLE ASSIGNMENT GRADES
+   ========================================================== */
+
+INSERT INTO Assignments
+(
+    Assignment_ID,
+    Enrollment_ID,
+    Assignment_Name,
+    Score,
+    Maximum_Score
+)
+VALUES
+(1, 1, 'SQL SELECT', 92, 100),
+(2, 1, 'SQL JOIN', 90, 100),
+
+(3, 2, 'SQL SELECT', 95, 100),
+(4, 2, 'SQL JOIN', 97, 100),
+
+(5, 3, 'SQL SELECT', 80, 100),
+(6, 3, 'SQL JOIN', 84, 100),
+
+(7, 4, 'SQL SELECT', 93, 100),
+(8, 4, 'SQL JOIN', 95, 100),
+
+(9, 5, 'SQL SELECT', 74, 100),
+(10, 5, 'SQL JOIN', 78, 100);
+
+
+/* ==========================================================
+   SAMPLE QUIZZES
+   ========================================================== */
+
+INSERT INTO Quizzes
+(
+    Quiz_ID,
+    Enrollment_ID,
+    Quiz_Name,
+    Score,
+    Maximum_Score
+)
+VALUES
+(1, 1, 'Quiz 1', 88, 100),
+(2, 2, 'Quiz 1', 94, 100),
+(3, 3, 'Quiz 1', 79, 100),
+(4, 4, 'Quiz 1', 92, 100),
+(5, 5, 'Quiz 1', 80, 100);
+
+
+/* ==========================================================
+   SAMPLE TESTS
+   ========================================================== */
+
+INSERT INTO Tests
+(
+    Test_ID,
+    Enrollment_ID,
+    Test_Name,
+    Score,
+    Maximum_Score
+)
+VALUES
+(1, 1, 'Midterm Exam', 94, 100),
+(2, 2, 'Midterm Exam', 97, 100),
+(3, 3, 'Midterm Exam', 85, 100),
+(4, 4, 'Midterm Exam', 95, 100),
+(5, 5, 'Midterm Exam', 78, 100);
+
+
+/* ==========================================================
+   SAMPLE ATTENDANCE
+   ========================================================== */
+
+INSERT INTO Attendance
+(
+    Attendance_ID,
+    Enrollment_ID,
+    Class_Date,
+    Status
+)
+VALUES
+(1, 1, '2026-09-01', 'Present'),
+(2, 1, '2026-09-03', 'Present'),
+
+(3, 2, '2026-09-01', 'Present'),
+(4, 2, '2026-09-03', 'Present'),
+
+(5, 3, '2026-09-01', 'Absent'),
+(6, 3, '2026-09-03', 'Present'),
+
+(7, 4, '2026-09-01', 'Present'),
+(8, 4, '2026-09-03', 'Present'),
+
+(9, 5, '2026-09-01', 'Present'),
+(10, 5, '2026-09-03', 'Absent');
+
+
+/* ==========================================================
+   STUDENT GRADE REPORT
+   ========================================================== */
+
+SELECT
+    S.Student_ID AS "Student ID",
+
+    S.First_Name AS "First Name",
+
+    S.Last_Name AS "Last Name",
+
+    S.Address,
+
+    S.City,
+
+    S.County,
+
+    S.Age,
+
+    C.Course_ID AS "Course ID",
+
+    C.Course_Name AS "Course",
+
+    CONCAT(
+        T.First_Name,
+        ' ',
+        T.Last_Name
+    ) AS "Teacher",
+
+    E.Semester,
+
+    E.School_Year AS "Year",
+
+    C.Credits,
+
+    /* Assignment Average */
+
+    (
+        SELECT ROUND(
+            AVG((A.Score / NULLIF(A.Maximum_Score,0)) * 100),
+            2
+        )
+        FROM Assignments A
+        WHERE A.Enrollment_ID = E.Enrollment_ID
+    ) AS "Assignment Average",
+
+    /* Quiz Average */
+
+    (
+        SELECT ROUND(
+            AVG((Q.Score / NULLIF(Q.Maximum_Score,0)) * 100),
+            2
+        )
+        FROM Quizzes Q
+        WHERE Q.Enrollment_ID = E.Enrollment_ID
+    ) AS "Quiz Average",
+
+    /* Test Average */
+
+    (
+        SELECT ROUND(
+            AVG((X.Score / NULLIF(X.Maximum_Score,0)) * 100),
+            2
+        )
+        FROM Tests X
+        WHERE X.Enrollment_ID = E.Enrollment_ID
+    ) AS "Test Average"
+
+FROM Students S
+
+JOIN Enrollments E
+    ON S.Student_ID = E.Student_ID
+
+JOIN Courses C
+    ON E.Course_ID = C.Course_ID
+
+JOIN Teachers T
+    ON C.Teacher_ID = T.Teacher_ID
+
+ORDER BY
+    S.Last_Name,
+    S.First_Name;
